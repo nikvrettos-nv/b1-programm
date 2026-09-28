@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Πρόγραμμα Β1 – 1ο Γυμνάσιο Αλίμου</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Commissioner:wght@400;500;600;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  --bg:#EEF2F5; --paper:#FFFFFF; --ink:#16212B; --muted:#5F6E7B; --line:#D5DDE3;
+  --today:#16212B; --today-ink:#FFFFFF;
+  --c-lang:#2F6DB5; --c-lang-bg:#E4EEF9;
+  --c-for:#7A4FB8;  --c-for-bg:#EFE8F9;
+  --c-math:#C0392B; --c-math-bg:#FBE6E3;
+  --c-sci:#1F8A63;  --c-sci-bg:#E0F3EB;
+  --c-art:#C27A12;  --c-art-bg:#FBF0DC;
+  --c-pe:#0E8A9A;   --c-pe-bg:#DDF2F4;
+  --c-tech:#52606D; --c-tech-bg:#E7EBEF;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#10161C; --paper:#18212A; --ink:#E8EEF3; --muted:#93A2AF; --line:#2A3743;
+    --today:#E8EEF3; --today-ink:#10161C;
+    --c-lang:#7FB0EC; --c-lang-bg:#1C2D42;
+    --c-for:#B89AE8;  --c-for-bg:#2A2340;
+    --c-math:#F08A7E; --c-math-bg:#3A2220;
+    --c-sci:#6ACFA6;  --c-sci-bg:#17332A;
+    --c-art:#EDB45C;  --c-art-bg:#3A2D17;
+    --c-pe:#64CAD6;   --c-pe-bg:#153238;
+    --c-tech:#AAB6C1; --c-tech-bg:#26303A;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#10161C; --paper:#18212A; --ink:#E8EEF3; --muted:#93A2AF; --line:#2A3743;
+  --today:#E8EEF3; --today-ink:#10161C;
+  --c-lang:#7FB0EC; --c-lang-bg:#1C2D42;
+  --c-for:#B89AE8;  --c-for-bg:#2A2340;
+  --c-math:#F08A7E; --c-math-bg:#3A2220;
+  --c-sci:#6ACFA6;  --c-sci-bg:#17332A;
+  --c-art:#EDB45C;  --c-art-bg:#3A2D17;
+  --c-pe:#64CAD6;   --c-pe-bg:#153238;
+  --c-tech:#AAB6C1; --c-tech-bg:#26303A;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font-family:"Commissioner","Segoe UI","Noto Sans",Arial,sans-serif;font-size:16px;line-height:1.4}
+.wrap{max-width:1100px;margin:0 auto;padding:28px 20px 40px}
+
+header{display:flex;align-items:flex-end;gap:20px;flex-wrap:wrap;margin-bottom:22px}
+.badge{font-weight:800;font-size:clamp(64px,14vw,112px);line-height:.85;letter-spacing:-.04em}
+.head-txt h1{margin:0;font-size:22px;font-weight:600}
+.head-txt p{margin:4px 0 0;color:var(--muted);font-size:14px}
+.actions{margin-left:auto;display:flex;gap:8px}
+button{font:inherit}
+.btn{border:1px solid var(--line);background:var(--paper);color:var(--ink);padding:8px 14px;border-radius:8px;cursor:pointer;font-size:14px;font-weight:500}
+.btn:focus-visible,.tab:focus-visible,.cell:focus-visible{outline:2px solid var(--c-lang);outline-offset:2px}
+
+/* grid */
+.grid{display:grid;grid-template-columns:44px repeat(5,1fr);gap:6px}
+.dayhead{font-weight:600;font-size:15px;padding:8px 10px;border-radius:8px;text-align:center}
+.dayhead.is-today{background:var(--today);color:var(--today-ink)}
+.ph{display:flex;align-items:center;justify-content:center;font-weight:800;font-size:18px;color:var(--muted)}
+.cell{background:var(--s-bg,var(--paper));border-radius:8px;padding:9px 10px 9px 12px;min-height:66px;
+  border-left:4px solid var(--s,var(--line));display:flex;flex-direction:column;justify-content:center}
+.cell .sub{font-weight:600;font-size:15px;line-height:1.2}
+.cell .t{font-size:12.5px;color:var(--muted);margin-top:3px}
+.cell.split .sub span{display:block}
+.cell.free{background:transparent;border:1.5px dashed var(--line);color:var(--muted);font-size:13px;align-items:center}
+.col-today{box-shadow:inset 0 0 0 2px var(--today)}
+
+/* mobile day view */
+.tabs{display:none;gap:6px;margin-bottom:12px}
+.tab{flex:1;border:1px solid var(--line);background:var(--paper);color:var(--ink);border-radius:8px;padding:9px 0;font-weight:600;font-size:14px;cursor:pointer}
+.tab[aria-selected="true"]{background:var(--today);color:var(--today-ink);border-color:var(--today)}
+.daylist{display:none;flex-direction:column;gap:6px}
+.row{display:grid;grid-template-columns:34px 1fr;gap:8px;align-items:stretch}
+
+@media (max-width:720px){
+  .grid{display:none}
+  .tabs,.daylist{display:flex}
+  .actions{margin-left:0}
+}
+
+/* legend + summary */
+h2{font-size:17px;font-weight:600;margin:34px 0 12px}
+.legend{display:flex;flex-wrap:wrap;gap:8px 18px;font-size:13.5px;color:var(--muted);margin-top:16px}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:-1px;background:var(--s)}
+.table-wrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;background:var(--paper);border-radius:10px;overflow:hidden;font-size:14.5px}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line)}
+th{font-weight:600;font-size:13px;color:var(--muted)}
+td.n{text-align:right;font-weight:600;font-variant-numeric:tabular-nums}
+td .dot{display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--s);margin-right:8px}
+tfoot td{font-weight:600;border-bottom:0}
+.note{font-size:13.5px;color:var(--muted);max-width:70ch;margin-top:14px}
+
+@media print{
+  @page{size:A4 landscape;margin:10mm}
+  :root{--bg:#fff;padding:0}
+  body{background:#fff;font-size:12px;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .wrap{padding:0;max-width:none}
+  .actions,.tabs,.daylist,.summary-sec{display:none!important}
+  .grid{display:grid!important;gap:4px}
+  .cell{min-height:52px;padding:6px 8px}
+  .badge{font-size:64px}
+  .dayhead.is-today{background:transparent;color:var(--ink)}
+  .col-today{box-shadow:none}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="badge">Β1</div>
+    <div class="head-txt">
+      <h1>Εβδομαδιαίο πρόγραμμα</h1>
+      <p>1ο Γυμνάσιο Αλίμου, ισχύει από 28 Σεπτεμβρίου 2026</p>
+    </div>
+    <div class="actions"><button class="btn" onclick="window.print()">Εκτύπωση</button></div>
+  </header>
+
+  <div class="tabs" role="tablist" id="tabs"></div>
+  <div class="daylist" id="daylist"></div>
+  <div class="grid" id="grid"></div>
+
+  <div class="legend" id="legend"></div>
+
+  <section class="summary-sec">
+    <h2>Ώρες ανά μάθημα</h2>
+    <div class="table-wrap"><table id="summary"></table></div>
+    <p class="note">Στα Γαλλικά/Ιταλικά το Β1 διδάσκεται μαζί με το Β2, κάθε μαθητής πηγαίνει στη γλώσσα που έχει επιλέξει. Στην Τεχνολογία/Πληροφορική το τμήμα χωρίζεται σε δύο ομάδες που κάνουν τα μαθήματα ταυτόχρονα.</p>
+  </section>
+</div>
+
+<script>
+const CAT={
+  lang:{name:"Ελληνικά & Ανθρωπιστικά",v:"lang"},
+  for:{name:"Ξένες γλώσσες",v:"for"},
+  math:{name:"Μαθηματικά",v:"math"},
+  sci:{name:"Φυσικές επιστήμες",v:"sci"},
+  art:{name:"Τέχνες",v:"art"},
+  pe:{name:"Φυσική Αγωγή",v:"pe"},
+  tech:{name:"Τεχνολογία & Δεξιότητες",v:"tech"}
+};
+const S={
+  "ΑΕΓ":{n:"Αρχαία Ελληνικά",t:"Καρασάββα",c:"lang"},
+  "ΜΕΤ":{n:"Αρχαία (μετάφραση)",t:"Κουστένη",c:"lang"},
+  "ΓΛΩ":{n:"Νεοελληνική Γλώσσα",t:"Κουστένη",c:"lang"},
+  "ΛΟΓ":{n:"Λογοτεχνία",t:"Βλαχάκης",c:"lang"},
+  "ΙΣΤ":{n:"Ιστορία",t:"Πιπέρου",c:"lang"},
+  "ΘΡΗ":{n:"Θρησκευτικά",t:"Χάμος",c:"lang"},
+  "ΑΓΓ":{n:"Αγγλικά",t:"Κουτσουμπού",c:"for"},
+  "Γ/Ι":{n:"Ξένη γλώσσα επιλογής",t:"—",c:"for"},
+  "ΜΑΘ":{n:"Μαθηματικά",t:"Βουτσινά",c:"math"},
+  "ΦΥΣ":{n:"Φυσική",t:"Σκυριανού",c:"sci"},
+  "ΧΗΜ":{n:"Χημεία",t:"Μποτσώνης",c:"sci"},
+  "ΒΙΟ":{n:"Βιολογία",t:"Μποτσώνης",c:"sci"},
+  "ΓΕΩ":{n:"Γεωγραφία",t:"Σκυριανού",c:"sci"},
+  "ΚΑΛ":{n:"Καλλιτεχνικά",t:"Δράκος",c:"art"},
+  "ΜΟΥ":{n:"Μουσική",t:"Βανδώρου",c:"art"},
+  "Φ.Α.":{n:"Φυσική Αγωγή",t:"Μητροπούλου",c:"pe"},
+  "ΔΕΞ":{n:"Εργαστήρια Δεξιοτήτων",t:"Κωστούλα",c:"tech"},
+  "Τ/Π":{n:["Τεχνολογία","Πληροφορική"],t:"Φοντούλη / Μοναστηριώτη",c:"tech",split:1}
+};
+const DAYS=["Δευτέρα","Τρίτη","Τετάρτη","Πέμπτη","Παρασκευή"];
+const SHORT=["Δευ","Τρι","Τετ","Πεμ","Παρ"];
+const P=[
+  ["ΑΕΓ","ΓΛΩ","ΓΕΩ","ΜΑΘ","ΙΣΤ","Γ/Ι","Τ/Π"],
+  ["ΜΕΤ","ΙΣΤ","Φ.Α.","ΘΡΗ","ΚΑΛ","ΓΕΩ",null],
+  ["ΦΥΣ","ΑΓΓ","ΛΟΓ","ΜΑΘ","ΜΕΤ","Γ/Ι","ΜΟΥ"],
+  ["ΧΗΜ","ΘΡΗ","Τ/Π","ΔΕΞ","ΑΕΓ","ΜΑΘ","ΓΛΩ"],
+  ["Φ.Α.","ΒΙΟ","ΛΟΓ","ΜΑΘ","ΦΥΣ","ΑΓΓ",null]
+];
+const jsDay=new Date().getDay(); const today=(jsDay>=1&&jsDay<=5)?jsDay-1:-1;
+
+function cell(code){
+  const d=document.createElement("div");
+  if(!code){d.className="cell free";d.textContent="Σχόλασμα";return d}
+  const s=S[code];d.className="cell"+(s.split?" split":"");
+  d.style.setProperty("--s",`var(--c-${s.c})`);d.style.setProperty("--s-bg",`var(--c-${s.c}-bg)`);
+  const name=Array.isArray(s.n)?s.n.map(x=>`<span>${x}</span>`).join(""):s.n;
+  d.innerHTML=`<div class="sub">${name}</div><div class="t">${s.t}</div>`;
+  return d;
+}
+// full grid
+const g=document.getElementById("grid");
+g.appendChild(document.createElement("div"));
+DAYS.forEach((d,i)=>{const h=document.createElement("div");h.className="dayhead"+(i===today?" is-today":"");h.textContent=d;g.appendChild(h)});
+for(let p=0;p<7;p++){
+  const ph=document.createElement("div");ph.className="ph";ph.textContent=p+1;g.appendChild(ph);
+  for(let d=0;d<5;d++){const c=cell(P[d][p]);if(d===today&&P[d][p])c.classList.add("col-today");g.appendChild(c)}
+}
+// mobile tabs
+const tabs=document.getElementById("tabs"),list=document.getElementById("daylist");
+let sel=today>=0?today:0;
+function renderDay(){
+  list.innerHTML="";
+  P[sel].forEach((code,p)=>{
+    if(!code&&p===6)return;
+    const r=document.createElement("div");r.className="row";
+    const ph=document.createElement("div");ph.className="ph";ph.textContent=p+1;
+    r.append(ph,cell(code));list.appendChild(r);
+  });
+  [...tabs.children].forEach((b,i)=>b.setAttribute("aria-selected",i===sel));
+}
+SHORT.forEach((d,i)=>{const b=document.createElement("button");b.className="tab";b.role="tab";b.textContent=d;
+  if(i===today)b.title="Σήμερα";b.onclick=()=>{sel=i;renderDay()};tabs.appendChild(b)});
+renderDay();
+// legend
+const lg=document.getElementById("legend");
+Object.values(CAT).forEach(c=>{const s=document.createElement("span");s.style.setProperty("--s",`var(--c-${c.v})`);s.innerHTML=`<i></i>${c.name}`;lg.appendChild(s)});
+// summary
+const cnt={};P.flat().forEach(c=>{if(c)cnt[c]=(cnt[c]||0)+1});
+const order=Object.keys(S);
+let rows=order.filter(k=>cnt[k]).map(k=>{const s=S[k];const n=Array.isArray(s.n)?s.n.join(" / "):s.n;
+  return `<tr><td style="--s:var(--c-${s.c})"><span class="dot"></span>${n}</td><td>${s.t}</td><td class="n">${cnt[k]}</td></tr>`}).join("");
+const total=Object.values(cnt).reduce((a,b)=>a+b,0);
+document.getElementById("summary").innerHTML=`<thead><tr><th>Μάθημα</th><th>Καθηγητής/τρια</th><th style="text-align:right">Ώρες</th></tr></thead><tbody>${rows}</tbody><tfoot><tr><td colspan="2">Σύνολο</td><td class="n">${total}</td></tr></tfoot>`;
+</script>
+</body>
+</html>
